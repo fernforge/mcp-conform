@@ -74,12 +74,13 @@ Run it straight from the repo, no install needed:
 npx github:fernforge/mcp-conform --cmd "node dist/index.js"
 ```
 
-Or pull it from npm:
+To pin it in CI or a dev dependency, install from the same source:
 
 ```bash
-npx mcp-conform --cmd "node dist/index.js"
-npm install --save-dev mcp-conform
+npm install --save-dev github:fernforge/mcp-conform
 ```
+
+`prepare` builds it on install, so the `mcp-conform` binary is ready after `npm install`.
 
 Requires Node ≥ 18. The MCP SDK is an optional peer dependency, only needed for live `--cmd` introspection (most projects already have it).
 

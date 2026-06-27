@@ -5,8 +5,9 @@
 // TypeScript and Python SDKs put in author code, so hits are high-signal.
 //
 // Spec references: SEP-2567 (session-id removal), SEP-2575 (initialize/initialized
-// handshake removal), SEP-2577 (Roots/Sampling/Logging deprecation), SEP-2133
-// (Tasks moves to an extension), plus the error-code change (-32002 -> -32602),
+// handshake removal), SEP-2577 (Roots/Sampling/Logging deprecation), SEP-2663
+// (Tasks extension, on the SEP-2133 extensions framework), plus the error-code
+// change -32002 -> -32602 (SEP-2164),
 // the new Mcp-Method / Mcp-Name routing headers, and ttlMs/cacheScope caching.
 
 import type { Finding, LintTarget, Severity, SourceFile } from "../types.js";
@@ -58,7 +59,7 @@ const HARD_BREAKS: Pattern[] = [
 ];
 
 // DEPRECATIONS — still present on 2026-07-28 but on a documented 12-month runway
-// to removal (~July 2027, SEP-2577 / SEP-2133). Warn, don't fail the build.
+// to removal (~July 2027, SEP-2577 / SEP-2663). Warn, don't fail the build.
 const DEPRECATIONS: Pattern[] = [
   {
     rule: "migrate/deprecated-sampling",
@@ -89,7 +90,7 @@ const DEPRECATIONS: Pattern[] = [
     severity: "warning",
     re: /\bCreateTaskRequest\w*\b|['"`]tasks\/(create|get|list|cancel)['"`]/,
     message: () =>
-      `Tasks move out of core into a versioned extension (SEP-2133) on 2026-07-28.`,
+      `Tasks move out of core into a versioned extension (SEP-2663, on the SEP-2133 extensions framework) on 2026-07-28.`,
     fix: `Negotiate Tasks under extensions (e.g. "com.modelcontextprotocol/tasks") instead of assuming it is a core capability.`,
   },
 ];

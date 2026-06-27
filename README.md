@@ -5,7 +5,7 @@
 It catches the things that get servers **rejected from the ChatGPT and Claude app directories** and that make agents call your tools wrong — missing tool annotations, thin/ambiguous schemas, tool-poisoning patterns in descriptions, and incomplete registry metadata — and gives every issue a one-line fix.
 
 ```bash
-npx mcp-conform --cmd "node dist/index.js"
+npx github:fernforge/mcp-conform --cmd "node dist/index.js"
 ```
 
 ```
@@ -42,15 +42,16 @@ Existing MCP security tools are **consumer/runtime-side** — they scan servers 
 
 ## Install
 
-Run it without installing:
+Run it straight from the repo (no install, no npm account needed):
 
 ```bash
-npx mcp-conform --cmd "node dist/index.js"
+npx github:fernforge/mcp-conform --cmd "node dist/index.js"
 ```
 
-Or add it as a dev dependency:
+Once it lands on npm you'll also be able to run:
 
 ```bash
+npx mcp-conform --cmd "node dist/index.js"      # npm release (coming soon)
 npm install --save-dev mcp-conform
 ```
 

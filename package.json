@@ -23,6 +23,7 @@
   "scripts": {
     "build": "tsc -p tsconfig.json",
     "test": "node --test --import tsx test/*.test.ts",
+    "prepare": "npm run build",
     "prepublishOnly": "npm run build",
     "demo": "node dist/cli.js --manifest test/fixtures/bad-tools.json --project test/fixtures"
   },

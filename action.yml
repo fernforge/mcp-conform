@@ -1,10 +1,14 @@
 name: "mcp-conform"
-description: "Lint your MCP server for publish-readiness: tool annotations, schema hygiene, tool-poisoning patterns, and registry metadata."
+description: "Lint your MCP server: conformance & safety (annotations, schema, tool-poisoning, registry) plus the 2026-07-28 spec breaking-change scanner."
 author: "fernforge"
 branding:
   icon: "check-circle"
   color: "purple"
 inputs:
+  ruleset:
+    description: "Rule packs to run: 'conform' (default), 'spec-migrate' (2026-07-28 breaking changes), or 'all'."
+    required: false
+    default: "conform"
   cmd:
     description: "Command to launch your MCP server over stdio (e.g. 'node dist/server.js'). Leave empty to lint a manifest or metadata only."
     required: false
@@ -26,9 +30,9 @@ inputs:
     required: false
     default: ""
   version:
-    description: "Version of mcp-conform to run via npx."
+    description: "Git ref (branch or tag) of fernforge/mcp-conform to run via npx."
     required: false
-    default: "latest"
+    default: "main"
 runs:
   using: "composite"
   steps:
@@ -36,9 +40,10 @@ runs:
       shell: bash
       run: |
         args=()
+        [ -n "${{ inputs.ruleset }}" ] && args+=(--ruleset "${{ inputs.ruleset }}")
         [ -n "${{ inputs.cmd }}" ] && args+=(--cmd "${{ inputs.cmd }}")
         [ -n "${{ inputs.manifest }}" ] && args+=(--manifest "${{ inputs.manifest }}")
         [ -n "${{ inputs.project }}" ] && args+=(--project "${{ inputs.project }}")
         [ -n "${{ inputs.min-score }}" ] && args+=(--min-score "${{ inputs.min-score }}")
         [ -n "${{ inputs.max-warnings }}" ] && args+=(--max-warnings "${{ inputs.max-warnings }}")
-        npx -y mcp-conform@${{ inputs.version }} "${args[@]}"
+        npx -y "github:fernforge/mcp-conform#${{ inputs.version }}" "${args[@]}"

@@ -1,7 +1,7 @@
 {
   "name": "mcp-conform",
-  "version": "0.1.0",
-  "description": "Author-side pre-publish conformance & safety linter for MCP (Model Context Protocol) servers — eslint for your MCP server. Checks tool annotations, schema hygiene, tool-poisoning/injection patterns, and registry/distribution metadata before you publish. CLI + GitHub Action.",
+  "version": "0.2.0",
+  "description": "Author-side conformance, safety & spec-migration linter for MCP (Model Context Protocol) servers — eslint for your MCP server. Checks tool annotations, schema hygiene, tool-poisoning/injection patterns, registry/distribution metadata, and scans your source for the 2026-07-28 spec breaking changes. CLI + GitHub Action.",
   "type": "module",
   "bin": {
     "mcp-conform": "dist/cli.js"

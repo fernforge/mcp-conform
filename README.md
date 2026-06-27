@@ -23,6 +23,27 @@ Conformance score: 76/100   FAIL
 
 No LLM key, no network, fully deterministic. It's a linter, not a model, so it's safe to run in CI, free to run a thousand times a day, and its verdict never drifts.
 
+## The 2026-07-28 spec breaks your server. Find out exactly where.
+
+The 2026-07-28 MCP spec is the largest revision since launch, and it's not backward compatible. Sessions are gone at the protocol layer (`Mcp-Session-Id` removed, SEP-2567), the `initialize`/`initialized` handshake is removed (SEP-2575), error code `-32002` becomes `-32602`, two new routing headers (`Mcp-Method`, `Mcp-Name`) are required, and `roots`/`sampling`/`logging` are deprecated. There are good write-ups of all this. What there isn't is a tool that reads *your* code and tells you which lines break.
+
+The `spec-migrate` rule pack does that. It scans your TypeScript/JavaScript/Python source for the removed and changed APIs and reports each hit with `file:line` and a fix:
+
+```bash
+npx github:fernforge/mcp-conform --ruleset spec-migrate --project .
+```
+
+```
+server.ts:18
+  ✖ error  migrate/session-id-header  Mcp-Session-Id is removed (SEP-2567). The 2026-07-28 transport is stateless; this header no longer exists.
+         fix: Read protocol version, client info and capabilities from params._meta on each request instead of a per-session store.
+server.ts:21
+  ✖ error  migrate/error-code-32002  JSON-RPC error code -32002 is reassigned to -32602 (Invalid Params).
+         fix: Change -32002 to -32602.
+```
+
+Hard breaks (sessions, handshake, error code) are errors; the deprecations on the 12-month runway (`roots`/`sampling`/`logging`, Tasks-to-extension) are warnings, so CI fails on what actually breaks on day one and nudges you on the rest. Run `--ruleset all` to combine it with the standing conformance lint.
+
 It lints what actually ships. Point it at your server's launch command and it starts the server over stdio, calls `tools/list`, and inspects the real schemas your users will receive, not a guess from your source.
 
 A drop-in GitHub Action scores every PR and writes a job summary.

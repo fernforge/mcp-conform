@@ -8,7 +8,19 @@ export type Category =
   | "safety"
   | "distribution"
   | "registry"
-  | "transport";
+  | "transport"
+  | "migration";
+
+/** Which rule packs to run. "conform" = the standing conformance/safety linter;
+ *  "spec-migrate" = the source scanner for the 2026-07-28 MCP spec breaking changes. */
+export type Ruleset = "conform" | "spec-migrate";
+
+/** A source file read off disk for the spec-migrate scanner. */
+export interface SourceFile {
+  /** Path relative to the project root, used in finding targets (e.g. "src/server.ts:42"). */
+  path: string;
+  content: string;
+}
 
 /** A single normalized MCP tool definition, as returned by `tools/list`. */
 export interface ToolDef {
@@ -55,6 +67,8 @@ export interface LintTarget {
   packageJson?: Record<string, unknown>;
   /** Parsed server.json (MCP registry manifest), if found. */
   serverJson?: Record<string, unknown>;
+  /** Source files read from the project, scanned by the spec-migrate rule pack. */
+  sourceFiles?: SourceFile[];
 }
 
 export interface Finding {

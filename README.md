@@ -1,8 +1,8 @@
 # mcp-conform
 
-**An eslint for your MCP server.** A deterministic, author-side **conformance & safety linter** you run **before you publish** a [Model Context Protocol](https://modelcontextprotocol.io) server to npm, PyPI, or the official MCP registry.
+An eslint for your MCP server. It's a deterministic, author-side conformance and safety linter you run before publishing a [Model Context Protocol](https://modelcontextprotocol.io) server to npm, PyPI, or the official MCP registry.
 
-It catches the things that get servers **rejected from the ChatGPT and Claude app directories** and that make agents call your tools wrong — missing tool annotations, thin/ambiguous schemas, tool-poisoning patterns in descriptions, and incomplete registry metadata — and gives every issue a one-line fix.
+It catches the things that get servers bounced from app directories or make agents call your tools wrong: missing tool annotations, thin or ambiguous schemas, tool-poisoning patterns in descriptions, and incomplete registry metadata. Every issue comes with a one-line fix.
 
 ```bash
 npx github:fernforge/mcp-conform --cmd "node dist/index.js"
@@ -21,41 +21,46 @@ delete_record
 Conformance score: 76/100   FAIL
 ```
 
-- **No LLM key, no network, fully deterministic.** It's a linter, not a model. Safe to run in CI, free to run a thousand times a day, and its verdict never drifts.
-- **Lints what actually ships.** Point it at your server's launch command and it starts the server over stdio, calls `tools/list`, and inspects the *real* schemas your users will receive — not a guess from your source.
-- **Drop-in GitHub Action** that scores every PR and writes a job summary.
+No LLM key, no network, fully deterministic. It's a linter, not a model, so it's safe to run in CI, free to run a thousand times a day, and its verdict never drifts.
+
+It lints what actually ships. Point it at your server's launch command and it starts the server over stdio, calls `tools/list`, and inspects the real schemas your users will receive, not a guess from your source.
+
+A drop-in GitHub Action scores every PR and writes a job summary.
 
 ---
 
 ## Why this exists
 
-The MCP ecosystem is shipping **tens of thousands of servers**, and the bar for publishing just went up:
+The MCP ecosystem is shipping tens of thousands of servers, and the app directories have gotten strict about what they accept.
 
-- **Bad tool annotations are the #1 cause of rejection** from the ChatGPT and Claude app directories. The spec says a client **must assume the worst case** (destructive, open-world) when a hint is missing — so if you don't set `readOnlyHint` / `destructiveHint` / `openWorldHint` / `title`, clients treat your safe read tool as dangerous.
-- **Tool descriptions are an injection surface.** They're injected straight into the agent's context, so an "ignore previous instructions" or an invisible Unicode payload in a description is a real **tool-poisoning** vector.
-- **The official registry now does namespace-verified publishing.** Reverse-DNS names, a `server.json` manifest, and clean package metadata are part of being publishable and discoverable.
-- The community is **drafting a pre-publish conformance checklist** ([modelcontextprotocol Discussion #2682](https://github.com/modelcontextprotocol/modelcontextprotocol/discussions)). `mcp-conform` is the automated enforcer for it.
+Bad tool annotations are the top cause of rejection from the ChatGPT and Claude app directories. The spec says a client must assume the worst case (destructive, open-world) when a hint is missing, so if you don't set `readOnlyHint` / `destructiveHint` / `openWorldHint` / `title`, clients treat your safe read tool as dangerous.
 
-Existing MCP security tools are **consumer/runtime-side** — they scan servers you're about to *install*. `mcp-conform` is **author-side and shift-left**: it makes *your* server conformant before anyone installs it.
+Tool descriptions are an injection surface. They're injected straight into the agent's context, so an "ignore previous instructions" line or an invisible Unicode payload in a description is a real tool-poisoning vector.
+
+The official registry now does namespace-verified publishing. Reverse-DNS names, a `server.json` manifest, and clean package metadata are part of being publishable and discoverable.
+
+The community is drafting a pre-publish conformance checklist ([modelcontextprotocol Discussion #2682](https://github.com/modelcontextprotocol/modelcontextprotocol/discussions)). `mcp-conform` automates it.
+
+Existing MCP security tools are consumer/runtime-side: they scan servers you're about to install. `mcp-conform` works the other way. It makes your server conformant before anyone installs it.
 
 ---
 
 ## Install
 
-Run it straight from the repo (no install, no npm account needed):
+Run it straight from the repo, no install needed:
 
 ```bash
 npx github:fernforge/mcp-conform --cmd "node dist/index.js"
 ```
 
-Once it lands on npm you'll also be able to run:
+Or pull it from npm:
 
 ```bash
-npx mcp-conform --cmd "node dist/index.js"      # npm release (coming soon)
+npx mcp-conform --cmd "node dist/index.js"
 npm install --save-dev mcp-conform
 ```
 
-Requires Node ≥ 18. The MCP SDK is an **optional** peer dependency — only needed for live `--cmd` introspection (most projects already have it).
+Requires Node ≥ 18. The MCP SDK is an optional peer dependency, only needed for live `--cmd` introspection (most projects already have it).
 
 ---
 
@@ -96,7 +101,7 @@ mcp-conform --cmd "node dist/index.js" --min-score 80    # fail under 80
 mcp-conform --cmd "node dist/index.js" --max-warnings 0  # fail on any warning
 ```
 
-`mcp-conform` exits **non-zero when there's any error-severity finding**, so it fails CI by default. Tighten the gate with `--min-score` and `--max-warnings`.
+`mcp-conform` exits non-zero when there's any error-severity finding, so it fails CI by default. Tighten the gate with `--min-score` and `--max-warnings`.
 
 ---
 

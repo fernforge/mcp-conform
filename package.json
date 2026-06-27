@@ -1,6 +1,9 @@
 {
-  "name": "mcp-conform",
+  "name": "@fernforge/mcp-conform",
   "version": "0.2.0",
+  "publishConfig": {
+    "access": "public"
+  },
   "description": "Author-side conformance, safety & spec-migration linter for MCP (Model Context Protocol) servers — eslint for your MCP server. Checks tool annotations, schema hygiene, tool-poisoning/injection patterns, registry/distribution metadata, and scans your source for the 2026-07-28 spec breaking changes. CLI + GitHub Action.",
   "type": "module",
   "bin": {

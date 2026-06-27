@@ -30,9 +30,9 @@ inputs:
     required: false
     default: ""
   version:
-    description: "Git ref (branch or tag) of fernforge/mcp-conform to run via npx."
+    description: "npm version or dist-tag of @fernforge/mcp-conform to run via npx."
     required: false
-    default: "main"
+    default: "latest"
 runs:
   using: "composite"
   steps:
@@ -46,4 +46,4 @@ runs:
         [ -n "${{ inputs.project }}" ] && args+=(--project "${{ inputs.project }}")
         [ -n "${{ inputs.min-score }}" ] && args+=(--min-score "${{ inputs.min-score }}")
         [ -n "${{ inputs.max-warnings }}" ] && args+=(--max-warnings "${{ inputs.max-warnings }}")
-        npx -y "github:fernforge/mcp-conform#${{ inputs.version }}" "${args[@]}"
+        npx -y @fernforge/mcp-conform@${{ inputs.version }} "${args[@]}"

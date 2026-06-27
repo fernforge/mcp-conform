@@ -5,7 +5,7 @@ An eslint for your MCP server. It's a deterministic, author-side conformance and
 It catches the things that get servers bounced from app directories or make agents call your tools wrong: missing tool annotations, thin or ambiguous schemas, tool-poisoning patterns in descriptions, and incomplete registry metadata. Every issue comes with a one-line fix.
 
 ```bash
-npx github:fernforge/mcp-conform --cmd "node dist/index.js"
+npx @fernforge/mcp-conform --cmd "node dist/index.js"
 ```
 
 ```
@@ -30,7 +30,7 @@ The 2026-07-28 MCP spec is the largest revision since launch, and it's not backw
 The `spec-migrate` rule pack does that. It scans your TypeScript/JavaScript/Python source for the removed and changed APIs and reports each hit with `file:line` and a fix:
 
 ```bash
-npx github:fernforge/mcp-conform --ruleset spec-migrate --project .
+npx @fernforge/mcp-conform --ruleset spec-migrate --project .
 ```
 
 ```
@@ -68,19 +68,17 @@ Existing MCP security tools are consumer/runtime-side: they scan servers you're 
 
 ## Install
 
-Run it straight from the repo, no install needed:
+Run it with npx, no install needed:
 
 ```bash
-npx github:fernforge/mcp-conform --cmd "node dist/index.js"
+npx @fernforge/mcp-conform --cmd "node dist/index.js"
 ```
 
-To pin it in CI or a dev dependency, install from the same source:
+To pin it in CI or as a dev dependency:
 
 ```bash
-npm install --save-dev github:fernforge/mcp-conform
+npm install --save-dev @fernforge/mcp-conform
 ```
-
-`prepare` builds it on install, so the `mcp-conform` binary is ready after `npm install`.
 
 Requires Node ≥ 18. The MCP SDK is an optional peer dependency, only needed for live `--cmd` introspection (most projects already have it).
 
@@ -142,7 +140,7 @@ jobs:
       - uses: actions/setup-node@v4
         with: { node-version: 20 }
       - run: npm ci && npm run build
-      - uses: fernforge/mcp-conform@v0.1.0
+      - uses: fernforge/mcp-conform@v0.2.0
         with:
           cmd: "node dist/index.js"
           min-score: "80"

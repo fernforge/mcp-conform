@@ -1,0 +1,44 @@
+name: "mcp-conform"
+description: "Lint your MCP server for publish-readiness: tool annotations, schema hygiene, tool-poisoning patterns, and registry metadata."
+author: "fernforge"
+branding:
+  icon: "check-circle"
+  color: "purple"
+inputs:
+  cmd:
+    description: "Command to launch your MCP server over stdio (e.g. 'node dist/server.js'). Leave empty to lint a manifest or metadata only."
+    required: false
+    default: ""
+  manifest:
+    description: "Path to a saved tools/list JSON file instead of launching the server."
+    required: false
+    default: ""
+  project:
+    description: "Project directory containing package.json / server.json."
+    required: false
+    default: "."
+  min-score:
+    description: "Fail the job if the conformance score is below this value (0-100)."
+    required: false
+    default: ""
+  max-warnings:
+    description: "Fail the job if warnings exceed this count."
+    required: false
+    default: ""
+  version:
+    description: "Version of mcp-conform to run via npx."
+    required: false
+    default: "latest"
+runs:
+  using: "composite"
+  steps:
+    - name: Run mcp-conform
+      shell: bash
+      run: |
+        args=()
+        [ -n "${{ inputs.cmd }}" ] && args+=(--cmd "${{ inputs.cmd }}")
+        [ -n "${{ inputs.manifest }}" ] && args+=(--manifest "${{ inputs.manifest }}")
+        [ -n "${{ inputs.project }}" ] && args+=(--project "${{ inputs.project }}")
+        [ -n "${{ inputs.min-score }}" ] && args+=(--min-score "${{ inputs.min-score }}")
+        [ -n "${{ inputs.max-warnings }}" ] && args+=(--max-warnings "${{ inputs.max-warnings }}")
+        npx -y mcp-conform@${{ inputs.version }} "${args[@]}"

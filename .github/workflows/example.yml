@@ -1,0 +1,22 @@
+# Example: gate your MCP server's PRs on conformance.
+# Copy this into your own MCP server repo as .github/workflows/mcp-conform.yml
+name: MCP Conformance
+on:
+  pull_request:
+  push:
+    branches: [main]
+jobs:
+  conform:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 20
+      - run: npm ci
+      - run: npm run build
+      # Lint the live server. Replace the command with how you start yours.
+      - uses: fernforge/mcp-conform@v0.1.0
+        with:
+          cmd: "node dist/index.js"
+          min-score: "80"

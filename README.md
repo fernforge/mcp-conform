@@ -25,7 +25,7 @@ No LLM key, no network, fully deterministic. It's a linter, not a model, so it's
 
 ## The 2026-07-28 spec breaks your server. Find out exactly where.
 
-The 2026-07-28 MCP spec is the largest revision since launch, and it's not backward compatible. Sessions are gone at the protocol layer (`Mcp-Session-Id` removed, SEP-2567), the `initialize`/`initialized` handshake is removed (SEP-2575), error code `-32002` becomes `-32602`, two new routing headers (`Mcp-Method`, `Mcp-Name`) are required, and `roots`/`sampling`/`logging` are deprecated. There are good write-ups of all this. What there isn't is a tool that reads *your* code and tells you which lines break.
+The 2026-07-28 MCP spec is the largest revision since launch, and it's not backward compatible. Sessions are gone at the protocol layer (`Mcp-Session-Id` removed, SEP-2567), the `initialize`/`initialized` handshake is removed (SEP-2575), error code `-32002` becomes `-32602`, two new routing headers (`Mcp-Method`, `Mcp-Name`) are required, and `roots`/`sampling`/`logging` are deprecated. It's all in the [official release candidate](https://blog.modelcontextprotocol.io/posts/2026-07-28-release-candidate/). What that post doesn't give you is a tool that reads *your* code and tells you which lines break.
 
 The `spec-migrate` rule pack does that. It scans your TypeScript/JavaScript/Python source for the removed and changed APIs and reports each hit with `file:line` and a fix:
 
